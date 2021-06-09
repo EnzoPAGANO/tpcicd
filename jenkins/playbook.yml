@@ -1,0 +1,7 @@
+-
+  name: dpl-python
+  hosts: all
+  become: yes
+  tasks:
+    - name: dplkube
+      shell: kubectl apply -f docker-compose.yml

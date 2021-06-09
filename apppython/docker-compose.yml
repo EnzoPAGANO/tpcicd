@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-python
+  labels:
+    app: python
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: python
+  template:
+    metadata:
+      labels:
+        app: python
+    spec:
+      containers:
+      - name: pythonsrv
+        image: pythonapp:1.0
+        ports:
+        - containerPort: 3800
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+  - #host: FQDN => ne peut pas être localhost
+    http:
+      paths:
+      - path: /dev
+        backend:
+          serviceName: pythonsrv
+          servicePort: 3800
+      - path: /prod
+        backend:
+          serviceName: pythonsrv
+          servicePort: 3800
+      - path: /test
+        backend:
+          serviceName: pythonsrv
+          servicePort: 3800

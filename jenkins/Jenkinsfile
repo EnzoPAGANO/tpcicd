@@ -1,0 +1,21 @@
+ pipeline {
+      agent any 
+      stages {
+        stage('Clone sources') {
+            steps {
+                git url: 'mon git'
+            }
+        }
+        
+       stage('Compile') { // Compile and do unit testing
+             steps {
+               sh 'docker build -t pythonapp:1.0 .'
+             }
+           }
+        stage('deploiement') {
+            steps {
+                sh 'ansible-playbook playbook.yaml -i inventaire.ini'
+            }
+        }
+      }
+ }
